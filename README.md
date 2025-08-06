@@ -15,8 +15,13 @@ cmake --build build
 ## Running
 
 ```bash
-build/FileToClipboard
+build/FileToClipboard [data_format] [data]
 ```
+
+- `[data_format]` - `FILE` or `STRING`
+- `[data]`:
+    - absoulte file path for `FILE` data format
+    - UTF-8 characters string for `STRING` data format
 
 ## License
 
