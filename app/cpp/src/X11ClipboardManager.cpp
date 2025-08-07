@@ -9,7 +9,7 @@
 #include <X11/Xatom.h>
 
 X11ClipboardManager::X11ClipboardManager(PayloadType payload_type, std::string payload)
-: payload_type(payload_type), payload(payload)
+: ClipboardManager(payload_type, payload)
 {
     // basic X11 initialization
     dpy = XOpenDisplay(NULL);

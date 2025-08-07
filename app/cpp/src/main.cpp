@@ -11,11 +11,14 @@
 #include <X11/Xatom.h>
 
 // FileToClipboard
+#include "ClipboardManager.hpp"
 #include "X11ClipboardManager.hpp"
+#include <memory>
 
 
 int main(int argc, char** argv)
 {
+    // command line arguments parsing
     if (argc != 3)
     {
         std::cerr << "argc should be 3, not " + std::to_string(argc) << std::endl;
@@ -36,10 +39,28 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
+    std::shared_ptr<ClipboardManager> clipboard_manager;
+
     try
     {
-        X11ClipboardManager clipboard_manager(data_format_to_payload.at(data_format), data);
-        clipboard_manager.loop();
+        if (std::getenv("WAYLAND_DISPLAY"))
+        {
+            std::cout << "running in Wayland mode\n";
+            //TODO: use WaylandClipboardManager
+            clipboard_manager = std::make_shared<X11ClipboardManager>(data_format_to_payload.at(data_format), data);
+        }
+        else if (std::getenv("DISPLAY"))
+        {
+            std::cout << "running in X11 mode\n";
+            clipboard_manager = std::make_shared<X11ClipboardManager>(data_format_to_payload.at(data_format), data);
+        }
+        else
+        {
+            std::cerr << "this program is unable to work on machines without X11 or Wayland" << std::endl;
+            return EXIT_FAILURE;
+        }
+        
+        clipboard_manager->loop();
     }
     catch(const std::exception& e)
     {

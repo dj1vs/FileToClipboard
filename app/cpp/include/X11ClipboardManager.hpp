@@ -8,22 +8,20 @@
 // X11 headers
 #include <X11/Xlib.h>
 
-enum class PayloadType {String, File};
+// FileToClipboard
+#include "ClipboardManager.hpp"
 
-class X11ClipboardManager
+class X11ClipboardManager : public ClipboardManager
 {
 public:
-    X11ClipboardManager(PayloadType payload_type = PayloadType::String, std::string payload = "X11ClipboardManager");
+    X11ClipboardManager(PayloadType payload_type, std::string payload);
 
-    void loop();
+    void loop() override;
 private:
     void send_text(XSelectionRequestEvent *sev, Atom atom);
     void deny_request(XSelectionRequestEvent* sev);
 private:
-    PayloadType payload_type;
-    std::string payload;
-
-    Display *dpy = nullptr;
+    Display *dpy;
 };
 
 #endif // _X11CLIPBOARDMANAGER_HPP_
