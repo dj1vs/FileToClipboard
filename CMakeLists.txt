@@ -8,11 +8,12 @@ find_package(X11 REQUIRED)
 
 
 set(PROJECT_CPP_SOURCES
-    "app/cpp/src/main.cpp"    
+    "app/cpp/src/main.cpp"
+    "app/cpp/src/X11ClipboardManager.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_CPP_SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${X11_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/app/cpp/include" ${X11_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${X11_LIBRARIES})
