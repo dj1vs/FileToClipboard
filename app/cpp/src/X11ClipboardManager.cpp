@@ -41,6 +41,8 @@ void X11ClipboardManager::loop()
     Atom text = XInternAtom(dpy, "TEXT", False);
     Atom targets = XInternAtom(dpy, "TARGETS", False);
     Atom string = XInternAtom(dpy, "STRING", False);
+    Atom jpg = XInternAtom(dpy, "image/jpeg", False);
+    Atom unspecified_bin_file = XInternAtom(dpy, "application/octet-stream", False);
 
     XEvent x_event;
     while (true)
@@ -57,15 +59,19 @@ void X11ClipboardManager::loop()
             
                 Atom requested = sev->target;
                 char* an = XGetAtomName(dpy, requested);
+
+                printf("Requestor: 0x%lx\n", sev->requestor);
+                std::cout << "Requested target: " << (an ? an : "null") << std::endl;
+
                 if (an) XFree(an);
             
                 if (requested == targets) {
 
-                    Atom supported[] = { utf8, string, text, targets };
+                    Atom supported[] = { utf8, string, text, jpg, unspecified_bin_file };
                     XChangeProperty(dpy, sev->requestor, sev->property, XA_ATOM, 32,
                                     PropModeReplace, (unsigned char*)supported, sizeof(supported)/sizeof(Atom));
                 }
-                else if (sev->property != None && (requested == utf8 || requested == string || requested == text)) {
+                else if (sev->property != None && (requested == utf8 || requested == string || requested == text || requested == jpg)) {
                     send_text(sev, utf8);
                 }
                 else {
