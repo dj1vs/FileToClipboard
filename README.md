@@ -1,4 +1,4 @@
-# FileToClipboard-RedSoft
+# FileToClipboard
 
 ## Supported Platforms
 
