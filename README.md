@@ -1,9 +1,18 @@
 # FileToClipboard-RedSoft
 
+## Supported Platforms
+
+Дистрибутивы Linux с X-Server или Wayland.
+
+Программа поддерживает работу в режиме сервера, поэтому наличие в системе clipboard manager-а не обязательно.
+
+Возможны небольшие неточности касательно поддерживаемых mime-типов.
+
 ## Dependencies
 
 - `cmake`
 - `g++`
+- `libx11-dev`
 
 ## Building
 
@@ -20,8 +29,8 @@ build/FileToClipboard [data_format] [data]
 
 - `[data_format]` - `FILE` or `STRING`
 - `[data]`:
-    - absoulte file path for `FILE` data format
-    - UTF-8 characters string for `STRING` data format
+    - `FILE`: absoulte file path
+    - `STRING`: UTF-8 characters string
 
 ## License
 
