@@ -2,11 +2,11 @@
 
 ## Supported Platforms
 
-Дистрибутивы Linux с X-Server или Wayland.
+Linux distributions with X-Server or Wayland.
 
-Программа поддерживает работу в режиме сервера, поэтому наличие в системе clipboard manager-а не обязательно.
+Running in server mode is supported so external clipboard manager is not necessary.
 
-Возможны небольшие неточности касательно поддерживаемых mime-типов.
+Minor compatability bugs with supported MIME types are possible.
 
 ## Dependencies
 
