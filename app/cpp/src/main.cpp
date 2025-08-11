@@ -3,18 +3,14 @@
 #include <string>
 #include <unordered_map>
 
-// STD C headers
+// STD C/C++ headers
+#include <memory>
 #include <string.h>
-
-// X11
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 // FileToClipboard
 #include "ClipboardManager.hpp"
 #include "X11ClipboardManager.hpp"
 #include "WaylandClipboardManager.hpp"
-#include <memory>
 
 
 int main(int argc, char** argv)
