@@ -10,6 +10,7 @@ find_package(X11 REQUIRED)
 set(PROJECT_CPP_SOURCES
     "app/cpp/src/main.cpp"
     "app/cpp/src/X11ClipboardManager.cpp"
+    "app/cpp/src/WaylandClipboardManager.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_CPP_SOURCES})

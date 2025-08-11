@@ -13,6 +13,7 @@
 // FileToClipboard
 #include "ClipboardManager.hpp"
 #include "X11ClipboardManager.hpp"
+#include "WaylandClipboardManager.hpp"
 #include <memory>
 
 
@@ -39,15 +40,26 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    std::shared_ptr<ClipboardManager> clipboard_manager;
+    // guessing and launching appropriate clipboard manager from context
 
+    std::shared_ptr<ClipboardManager> clipboard_manager;
     try
     {
         if (std::getenv("WAYLAND_DISPLAY"))
         {
             std::cout << "running in Wayland mode\n";
-            //TODO: use WaylandClipboardManager
-            clipboard_manager = std::make_shared<X11ClipboardManager>(data_format_to_payload.at(data_format), data);
+
+            try
+            {
+                // first try to run in x11-compatability mode
+                clipboard_manager = std::make_shared<X11ClipboardManager>(data_format_to_payload.at(data_format), data);
+            }
+            catch (...)
+            {
+                // if that didn't work try to work with wayland's wl-copy
+                clipboard_manager.reset();
+                clipboard_manager = std::make_shared<WaylandClipboardManager>(data_format_to_payload.at(data_format), data);
+            }
         }
         else if (std::getenv("DISPLAY"))
         {
@@ -56,11 +68,11 @@ int main(int argc, char** argv)
         }
         else
         {
-            std::cerr << "this program is unable to work on machines without X11 or Wayland" << std::endl;
+            std::cerr << "cannot guess context in which i'm running" << std::endl;
             return EXIT_FAILURE;
         }
-        
-        clipboard_manager->loop();
+
+        clipboard_manager->run();
     }
     catch(const std::exception& e)
     {

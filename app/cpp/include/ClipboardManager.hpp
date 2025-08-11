@@ -12,7 +12,12 @@ public:
     ClipboardManager(PayloadType payload_type, std::string payload)
         : payload_type(payload_type), payload(payload) {}
 
-    virtual void loop() {};
+    virtual void run() {}
+protected:
+    static std::string get_correct_file_payload_uri(const std::string &file_path)
+    {
+        return "file://" + file_path + '\n';
+    }
 protected:
     PayloadType payload_type;
     std::string payload;

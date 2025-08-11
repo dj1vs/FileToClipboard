@@ -16,10 +16,12 @@ class X11ClipboardManager : public ClipboardManager
 public:
     X11ClipboardManager(PayloadType payload_type, std::string payload);
 
-    void loop() override;
+    void run() override;
 private:
-    void send_text(XSelectionRequestEvent *sev, Atom atom);
+    void send_msg(XSelectionRequestEvent *sev, Atom atom);
     void deny_request(XSelectionRequestEvent* sev);
+
+    std::string get_file_mime_type();
 private:
     Display *dpy;
 };
