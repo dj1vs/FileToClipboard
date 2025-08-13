@@ -96,7 +96,6 @@ void X11ClipboardManager::run()
                     ssev.time = sev->time;
                         
                     XSendEvent(dpy, sev->requestor, True, NoEventMask, (XEvent *)&ssev);
-                    XFlush(dpy);
                 }
                 else if (sev->property != None 
                     && std::find(supported_arr.begin(), supported_arr.end(), requested) != supported_arr.end())
@@ -125,18 +124,12 @@ void X11ClipboardManager::send_msg(XSelectionRequestEvent* sev, Atom target) {
     ssev.time = sev->time;
 
     XSendEvent(dpy, sev->requestor, True, NoEventMask, reinterpret_cast<XEvent*>(&ssev));
-    XFlush(dpy);
 }
 
 
 void X11ClipboardManager::deny_request(XSelectionRequestEvent* sev)
 {
     XSelectionEvent ssev;
-    char *an;
-
-    an = XGetAtomName(dpy, sev->target);
-    if (an)
-        XFree(an);
 
     ssev.type = SelectionNotify;
     ssev.requestor = sev->requestor;
@@ -146,14 +139,13 @@ void X11ClipboardManager::deny_request(XSelectionRequestEvent* sev)
     ssev.time = sev->time;
 
     XSendEvent(dpy, sev->requestor, True, NoEventMask, (XEvent *)&ssev);
-    XFlush(dpy);
 }
 
 std::string get_cmd_output(const std::string &cmd);
 
 std::string X11ClipboardManager::get_file_mime_type()
 {
-    // try to get mime type from xdg-mime
+    // try to get mime type from file utility
     if (system("which file > /dev/null 2>&1") == 0) {
         std::string mime = get_cmd_output("file --mime-type -b \"" + payload + "\"");
         if (!mime.empty()) {
