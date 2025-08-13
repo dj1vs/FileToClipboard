@@ -45,7 +45,6 @@ void X11ClipboardManager::run()
     Atom targets = XInternAtom(dpy, "TARGETS", False);
     Atom string = XInternAtom(dpy, "STRING", False);
     Atom text_plain = XInternAtom(dpy, "text/plain", False);
-    Atom text_plain_utf8 = XInternAtom(dpy, "text/plain;charset=utf-8", False);
     Atom compound_text = XInternAtom(dpy, "COMPOUND_TEXT", False);
 
     std::vector<Atom> supported_arr;
@@ -54,11 +53,11 @@ void X11ClipboardManager::run()
         Atom target_file_type_atom = XInternAtom(dpy, get_file_mime_type().c_str(), False);
         Atom text_uri_list = XInternAtom(dpy, "text/uri-list", False);
         Atom gnome_file_data = XInternAtom(dpy, "x-special/gnome-copied-files", False);
-        supported_arr = { utf8, string, text, target_file_type_atom, text_plain, text_plain_utf8, compound_text, text_uri_list, gnome_file_data};
+        supported_arr = { utf8, string, text, target_file_type_atom, text_plain, compound_text, text_uri_list, gnome_file_data};
     }
     else
     {
-        supported_arr = { utf8, string, text, text_plain, text_plain_utf8, compound_text };
+        supported_arr = { utf8, string, text, text_plain, compound_text };
     }
 
     XEvent x_event;
@@ -115,7 +114,7 @@ void X11ClipboardManager::run()
 void X11ClipboardManager::send_msg(XSelectionRequestEvent* sev, Atom target) {
     XChangeProperty(dpy, sev->requestor, sev->property, target, 8, PropModeReplace, reinterpret_cast<const unsigned char*>(payload.c_str()), payload.size());
 
-    XSelectionEvent ssev{};
+    XSelectionEvent ssev;
     ssev.type = SelectionNotify;
     ssev.requestor = sev->requestor;
     ssev.selection = sev->selection;
@@ -138,7 +137,7 @@ void X11ClipboardManager::deny_request(XSelectionRequestEvent* sev)
     ssev.property = None;
     ssev.time = sev->time;
 
-    XSendEvent(dpy, sev->requestor, True, NoEventMask, (XEvent *)&ssev);
+    XSendEvent(dpy, sev->requestor, True, NoEventMask, reinterpret_cast<XEvent *>(&ssev));
 }
 
 std::string get_cmd_output(const std::string &cmd);
