@@ -114,7 +114,8 @@ void X11ClipboardManager::run()
 }
 
 void X11ClipboardManager::send_msg(XSelectionRequestEvent* sev, Atom target) {
-    XChangeProperty(dpy, sev->requestor, sev->property, target, 8, PropModeReplace, reinterpret_cast<const unsigned char*>(payload.c_str()), payload.size());
+    XChangeProperty(dpy, sev->requestor, sev->property, target, 8,
+        PropModeReplace, reinterpret_cast<const unsigned char*>(payload.c_str()), static_cast<int>(payload.size()));
 
     XSelectionEvent ssev;
     ssev.type = SelectionNotify;
