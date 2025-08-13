@@ -101,7 +101,8 @@ void X11ClipboardManager::run()
                 {
                     send_msg(sev, requested);
                 }
-                else {
+                else
+                {
                     deny_request(sev);
                 }
             
@@ -145,9 +146,11 @@ std::string get_cmd_output(const std::string &cmd);
 std::string X11ClipboardManager::get_file_mime_type()
 {
     // try to get mime type from file utility
-    if (system("which file > /dev/null 2>&1") == 0) {
+    if (system("which file > /dev/null 2>&1") == 0)
+    {
         std::string mime = get_cmd_output("file --mime-type -b \"" + payload + "\"");
-        if (!mime.empty()) {
+        if (!mime.empty())
+        {
             return mime;
         }
     }
@@ -162,7 +165,8 @@ std::string X11ClipboardManager::get_file_mime_type()
     std::string ext = payload.substr(last_dot + 1);
     std::transform(ext.begin(), ext.end(), ext.begin(), [](char c) {return std::tolower(c);});
 
-    static const std::unordered_map<std::string, std::string> ext_to_mime_type = {
+    static const std::unordered_map<std::string, std::string> ext_to_mime_type = 
+    {
         {"txt", "text/plain"},
         {"html", "text/html"},
         {"htm", "text/html"},

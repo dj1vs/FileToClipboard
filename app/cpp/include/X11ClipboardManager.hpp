@@ -23,7 +23,7 @@ private:
 
     std::string get_file_mime_type();
 private:
-    Display *dpy;
+    Display *dpy = nullptr;
 };
 
 #endif // _X11CLIPBOARDMANAGER_HPP_
