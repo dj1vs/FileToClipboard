@@ -40,12 +40,7 @@ X11ClipboardManager::X11ClipboardManager(PayloadType payload_type, std::string p
 
 void X11ClipboardManager::run()
 {
-    Atom utf8 = XInternAtom(dpy, "UTF8_STRING", False);
-    Atom text = XInternAtom(dpy, "TEXT", False);
-    Atom targets = XInternAtom(dpy, "TARGETS", False);
-    Atom string = XInternAtom(dpy, "STRING", False);
-    Atom text_plain = XInternAtom(dpy, "text/plain", False);
-    Atom compound_text = XInternAtom(dpy, "COMPOUND_TEXT", False);
+    
 
     std::vector<Atom> supported_arr;
     if (payload_type == PayloadType::File)
@@ -53,10 +48,16 @@ void X11ClipboardManager::run()
         Atom target_file_type_atom = XInternAtom(dpy, get_file_mime_type().c_str(), False);
         Atom text_uri_list = XInternAtom(dpy, "text/uri-list", False);
         Atom gnome_file_data = XInternAtom(dpy, "x-special/gnome-copied-files", False);
-        supported_arr = { utf8, string, text, target_file_type_atom, text_plain, compound_text, text_uri_list, gnome_file_data};
+        supported_arr = { target_file_type_atom, text_uri_list, gnome_file_data};
     }
     else
     {
+        Atom utf8 = XInternAtom(dpy, "UTF8_STRING", False);
+        Atom text = XInternAtom(dpy, "TEXT", False);
+        Atom targets = XInternAtom(dpy, "TARGETS", False);
+        Atom string = XInternAtom(dpy, "STRING", False);
+        Atom text_plain = XInternAtom(dpy, "text/plain", False);
+        Atom compound_text = XInternAtom(dpy, "COMPOUND_TEXT", False);
         supported_arr = { utf8, string, text, text_plain, compound_text };
     }
 
@@ -94,7 +95,7 @@ void X11ClipboardManager::run()
                     ssev.property = sev->property;
                     ssev.time = sev->time;
                         
-                    XSendEvent(dpy, sev->requestor, True, NoEventMask, (XEvent *)&ssev);
+                    XSendEvent(dpy, sev->requestor, True, NoEventMask, reinterpret_cast<XEvent *>(&ssev));
                 }
                 else if (sev->property != None 
                     && std::find(supported_arr.begin(), supported_arr.end(), requested) != supported_arr.end())
